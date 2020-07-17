@@ -2,7 +2,8 @@ import csv
 
 # file: tickets_appels_201202.csv
 
-def load_csvfile(name):
+
+def load_csvfile(name="tickets_appels_201202.csv"):
 
     try:
         file = open(name, encoding='ISO-8859-1', newline='')
@@ -20,7 +21,4 @@ def load_csvfile(name):
             print(row['N° Facture'])
         except:
             continue
-
-        i += 1
-
 
