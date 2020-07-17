@@ -1,5 +1,8 @@
 import sys
 
+import repository
+
+
 
 def UI_loop():
 
@@ -11,10 +14,13 @@ def UI_loop():
             break
 
         if len(words) == 2 and words[0] == 'load':
+
             try:
+                repository.load_csvfile(words[1])
                 print("file loaded successfully")
             except Exception as exception:
                 print("file can't be loaded try again: " + exception.args)
+
         else:
             print("command not found: " + line)
 
