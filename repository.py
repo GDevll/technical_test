@@ -25,7 +25,7 @@ def load_csvfile(name="tickets_appels_201202.csv"):
             continue
 
         print(row)
-        break
+        break 
 
         # #try:
         #     print(row['N° Facture'])
