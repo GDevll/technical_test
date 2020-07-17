@@ -12,7 +12,7 @@ def UI_loop():
         words = [word for word in line.split(' ') if word.strip()]
 
         if not words:
-            print('-', end='')
+            print('-', end='', flush=True)
             continue
 
         if 'exit' == line:
@@ -33,7 +33,7 @@ def UI_loop():
         else:
             print("command not found: " + line)
 
-        print('-', end='')
+        print('-', end='', flush=True)
 
 
 
@@ -42,7 +42,7 @@ def main():
 
     print("\ncall file analyser started")
     print("\nPlease initialized the process by entering:'load filename.csv'\n")
-    print('-', end='')
+    print('-', end='', flush=True)
 
     UI_loop()
 
