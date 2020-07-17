@@ -12,13 +12,22 @@ def load_csvfile(name="tickets_appels_201202.csv"):
 
     print("loading csv file: " + name)
 
-    fname = ["Compte facturé", "N° Facture", "N° abonné", "Date", "Heure", "Durée/volume réel", "Durée/volume facturé", "Type"]
+    fname = ["Compte facturé", "N° Facture", "N° abonné\t", "Date ", "Heure", "Durée/volume réel", "Durée/volume facturé", "Type "]
     reader = csv.DictReader(file, delimiter=";", fieldnames=fname)
 
+    i = 0
+    is_query = False
     for row in reader:
-
-        try:
-            print(row['N° Facture'])
-        except:
+        if not is_query:
+            if list(row.values()) == fname:
+                is_query = True
+            i+= 1
             continue
 
+        print(row)
+        break
+
+        # #try:
+        #     print(row['N° Facture'])
+        # except:
+        #     continue
