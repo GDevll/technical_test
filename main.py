@@ -19,7 +19,7 @@ def UI_loop():
                 repository.load_csvfile(words[1])
                 print("file loaded successfully")
             except Exception as exception:
-                print("file can't be loaded try again: " + exception.args)
+                print("file can't be loaded try again: " + exception.args[0])
 
         else:
             print("command not found: " + line)
