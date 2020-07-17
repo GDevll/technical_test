@@ -1,17 +1,35 @@
 import sys
 
 
-def main():
-
-    print("call file analyser started")
-    print("Please initialized the process by entering:'charge filename.csv'")
-    print('-', end='')
+def UI_loop():
 
     for line in sys.stdin:
-        if 'exit' == line.rstrip():
+        line = line.rstrip()
+        words = [word for word in line.split(' ') if word.strip()]
+
+        if 'exit' == line:
             break
-        print("I watched this: " + line.rstrip())
+
+        if len(words) == 2 and words[0] == 'load':
+            try:
+                print("file loaded successfully")
+            except Exception as exception:
+                print("file can't be loaded try again: " + exception.args)
+        else:
+            print("command not found: " + line)
+
         print('-', end='')
+
+
+def main():
+
+    print("\ncall file analyser started")
+    print("\nPlease initialized the process by entering:'load filename.csv'\n")
+    print('-', end='')
+
+    UI_loop()
+
+    print("call file analyser stopped")
 
 
 if __name__ == '__main__':
