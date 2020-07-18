@@ -23,6 +23,24 @@ def connect_database():
     return co
 
 
+def load_data_db(row, co):
+
+    typed = row["Type "]
+
+    if typed.find("connexion") != -1:
+        print("connexion")
+    elif typed.find("appel") != -1:
+        print("call")
+    elif typed.find("sms") != -1:
+        print("message")
+    elif typed.find("suivi conso") != -1:
+        print("suivi conso")
+    elif typed.find("messagerie vocale"):
+        print("messagerie vocale")
+    else:
+        return 1
+    return 0
+
 
 
 
@@ -32,18 +50,27 @@ def load_csvfile(name="tickets_appels_201202.csv"):
     csv_reader = csv_loading(name, fname)
     co_db = connect_database()
 
+    unexploitable_d = 0
+
     i = 0
     is_query = False
     for row in csv_reader:
+
         if not is_query:
             if list(row.values()) == fname:
                 is_query = True
             i+= 1
             continue
 
-        #load_data_db(row, co_db)
+        unexploitable_d += load_data_db(row, co_db)
 
+    if unexploitable_d == 0:
+        print("each datum has been processed")
+    else:
+        print(str(unexploitable_d) + " data haven't been processed")
 
+    if not is_query:
+        raise Exception("the file's structure is not correct")
         # #try:
         #     print(row['N° Facture'])
         # except:
