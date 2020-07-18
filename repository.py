@@ -122,7 +122,12 @@ def load_csvfile(name="tickets_appels_201202.csv"):
 
     fname = ["Compte facturé", "N° Facture", "N° abonné\t", "Date ", "Heure", "Durée/volume réel", "Durée/volume facturé", "Type "]
     csv_reader = csv_loading(name, fname)
-    co_db = connect_database()
+
+    try:
+        co_db = connect_database()
+    except:
+        raise Exception("database not found")
+
     cursor = co_db.cursor()
 
     unexploitable_d = 0
