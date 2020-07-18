@@ -51,20 +51,30 @@ def load_sub(row, db, cursor):
     if (cursor.rowcount == 0):
         insert_sub(row, db, cursor)
 
+
+def check_hour(hour):
+    try:
+        res = datetime.strptime(hour, '%H:%M:%S').strftime('%H:%M:%S')
+    except:
+        res = None
+
+    return res
+
 def verif_data(row):
     try:
         date = datetime.strptime(row["Date "], '%d/%m/%Y').strftime('%Y-%m-%d')
     except:
         date = None
 
-    try:
-        hour = datetime.strptime(row["Heure"], '%H:%M:%S').strftime('%H:%M:%S')
-    except:
-        hour = None
-
-    return (date, hour)
+    return (date, check_hour(row["Heure"]))
 
 
+
+def format_duration(val):
+    duration = val[3]
+    billed_d = val[4]
+
+    return (val[0], val[1],val[2], check_hour(duration), check_hour(billed_d))
 
 def load_data_db(row, co, cursor):
 
@@ -82,7 +92,9 @@ def load_data_db(row, co, cursor):
     if typed.find("connexion") != -1:
         sql += "`Iconnection` (`subscriber`, `date`, `time`, `amount`, `billed_amount`) VALUES (%s, %s, %s, %s, %s)"
     elif typed.find("appel") != -1:
-        return 1
+        val = format_duration(val)
+        print(val)
+        sql += "`call` (`subscriber`, `date`, `time`, `duration`, `billed_duration`) VALUES (%s, %s, %s, %s, %s)"
     elif typed.find("sms") != -1:
         #print("message")
         return 1

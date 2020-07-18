@@ -22,8 +22,8 @@ CREATE TABLE IF NOT EXISTS `phonedata`.`call`(
     `id` INT NOT NULL AUTO_INCREMENT,
     `subscriber`INT NOT NULL,
     `date` DATE,
-    `time` TIME NOT NULL,
-    `duration` TIME NOT NULL,
+    `time` TIME,
+    `duration` TIME,
     `billed_duration` TIME NOT NULL,
     PRIMARY KEY(`id`),
     FOREIGN KEY(`subscriber`) REFERENCES `phonedata`.`subscriber`(`subscriber`)
