@@ -1,6 +1,6 @@
 import mysql.connector
 
-
+# Request the number of sms sent
 def count_sms(db):
     if db is None:
         print("Error, can't be applied\nNo database loaded...")
@@ -22,6 +22,8 @@ def count_sms(db):
         else:
             print("There are " + str(nb_sms) + " messages.")
 
+
+# Request the sum of call's duration from the 15th february 2012
 def sum_call(db):
     if db is None:
         print("Error, can't be applied\nNo database loaded...")
@@ -43,6 +45,7 @@ def sum_call(db):
 
 
 
+# Request the Top 10 billed_amount of data per subscriber
 def best_customer(db):
     if db is None:
         print("Error, can't be applied\nNo database loaded...")

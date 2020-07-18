@@ -4,7 +4,7 @@ import repository
 import req_db
 
 
-
+# load the CSV file or juste the database
 def loading_cmd(words, db_co):
     # if db_cursor is not None:
     #     print("A csv file is already loaded")
@@ -28,6 +28,7 @@ def loading_cmd(words, db_co):
 
     return db_co
 
+# loop reading input and analyze it
 def UI_loop():
 
     db_co = None
@@ -58,7 +59,7 @@ def UI_loop():
 
 
 
-
+# Initialize the loop for the UI
 def main():
 
     print("\ncall file analyser started")

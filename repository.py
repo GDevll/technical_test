@@ -4,7 +4,7 @@ from datetime import datetime
 
 # file: tickets_appels_201202.csv
 
-
+#load the csv file
 def csv_loading(name, fname):
     try:
         file = open(name, encoding='ISO-8859-1', newline='')
@@ -18,12 +18,12 @@ def csv_loading(name, fname):
     return reader
 
 
-
+#Connect the db to the program
 def connect_database():
     co = mysql.connector.connect(user='gillian', password='password', database='phonedata')
     return co
 
-
+#Insert a new subscriber in the Db
 def insert_sub(row, db, cursor):
     account = row["Compte facturé"]
     invoice = row["N° Facture"]
@@ -46,7 +46,7 @@ def insert_sub(row, db, cursor):
 
     return True
 
-
+#Check if a new subscriber should be insert in the db
 def load_sub(row, db, cursor):
 
     subs = row["N° abonné\t"]
@@ -61,13 +61,13 @@ def load_sub(row, db, cursor):
     cursor.execute(sql_find_sub)
     cursor.fetchall()
 
-    if (cursor.rowcount == 0):
+    if cursor.rowcount == 0:
         if insert_sub(row, db, cursor) == False:
             return False
 
     return True
 
-
+#check hour validity
 def check_hour(hour):
     try:
         res = datetime.strptime(hour, '%H:%M:%S').strftime('%H:%M:%S')
@@ -76,6 +76,7 @@ def check_hour(hour):
 
     return res
 
+#Check date and Hour validity
 def verif_data(row):
     try:
         date = datetime.strptime(row["Date "], '%d/%m/%Y').strftime('%Y-%m-%d')
@@ -85,19 +86,13 @@ def verif_data(row):
 
     hour = check_hour(row["Heure"])
 
-    if hour is None:
-        return None
-
     return (date, hour)
 
 
-
+# Check duration as time
 def format_duration(val):
     duration = check_hour(val[3])
     billed_d = check_hour(val[4])
-
-    if duration is None or billed_d is None:
-        return None
 
     return (val[0], val[1],val[2], duration, billed_d)
 
@@ -111,7 +106,7 @@ def verify_float(val):
 
     return True
 
-
+# Parse A row in several type of data and insert it in the Db
 def load_data_db(row, co, cursor):
 
     if not load_sub(row, co, cursor):
@@ -121,31 +116,20 @@ def load_data_db(row, co, cursor):
     typed = row["Type "]
     r_amount = row["Durée/volume réel"]
     i_amount = row["Durée/volume facturé"]
-    if verif_data(row) is None:
-        return 1
+
     (date, hour) = verif_data(row)
 
     sql = "INSERT INTO `phonedata`."
     val = (subs, date, hour, r_amount, i_amount)
 
     if typed.find("connexion") != -1:
-        if not verify_float(val):
-            return 1
         sql += "`Iconnection` (`subscriber`, `date`, `time`, `amount`, `billed_amount`) VALUES (%s, %s, %s, %s, %s)"
     elif typed.find("appel") != -1:
         val = format_duration(val)
-        if val is None:
-            return 1
         sql += "`call` (`subscriber`, `date`, `time`, `duration`, `billed_duration`) VALUES (%s, %s, %s, %s, %s)"
     elif typed.find("sms") != -1:
         val = (subs, date, hour)
         sql += "`msg` (`subscriber`, `date`, `time`) VALUES (%s, %s, %s)"
-    elif typed.find("suivi conso") != -1:
-        print("unsupported: suivi conso")
-        return 1
-    elif typed.find("messagerie vocale") != -1:
-        print("unsupported: messagerie vocale")
-        return 1
     else:
         print("unsupported type: " + typed)
         return 1
@@ -160,7 +144,7 @@ def load_data_db(row, co, cursor):
 
 
 
-
+# Read through each line of the CSV
 def load_csvfile(name="tickets_appels_201202.csv"):
 
     fname = ["Compte facturé", "N° Facture", "N° abonné\t", "Date ", "Heure", "Durée/volume réel", "Durée/volume facturé", "Type "]
@@ -186,7 +170,12 @@ def load_csvfile(name="tickets_appels_201202.csv"):
             i+= 1
             continue
 
-        unexploitable_d += load_data_db(row, co_db, cursor)
+        try:
+            unexploitable_d += load_data_db(row, co_db, cursor)
+        except:
+            unexploitable_d += 1
+            continue
+
 
     if not is_query:
         raise Exception("the file's structure is not correct")
