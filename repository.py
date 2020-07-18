@@ -23,12 +23,55 @@ def connect_database():
     return co
 
 
-def load_data_db(row, co):
+def insert_sub(row, db, cursor):
+    account = row["Compte facturé"]
+    invoice = row["N° Facture"]
+    subs = row["N° abonné\t"]
 
+    sql_insert = "INSERT INTO `phonedata`.`subscriber` (`invoice_acc`, `invoice`, `subscriber`) VALUES (%s, %s, %s)"
+    val = (account, invoice, subs)
+    cursor.execute(sql_insert, val)
+
+    db.commit()
+
+    if cursor.rowcount == 0:
+        raise Exception("Error subscriber insertion")
+    else:
+        print("Yes")
+
+
+
+def load_sub(row, db, cursor):
+
+    subs = row["N° abonné\t"]
+
+    sql_find_sub = "SELECT * FROM `phonedata`.`subscriber` WHERE `subscriber`=" + subs
+
+    cursor.execute(sql_find_sub)
+    records = cursor.fetchall()
+
+    if (cursor.rowcount == 0):
+        insert_sub(row, db, cursor)
+
+
+
+def load_data_db(row, co, cursor):
+
+    load_sub(row, co, cursor)
+
+    subs = row["N° abonné\t"]
     typed = row["Type "]
+    date = row["Date "]
+    hour = row["Heure"]
+    r_amount = row["Durée/volume réel"]
+    i_amount = row["Durée/volume facturé"]
+
+    sql = "INSERT INTO phonedata."
+    val = ("","")
 
     if typed.find("connexion") != -1:
         print("connexion")
+
     elif typed.find("appel") != -1:
         print("call")
     elif typed.find("sms") != -1:
@@ -39,6 +82,11 @@ def load_data_db(row, co):
         print("messagerie vocale")
     else:
         return 1
+
+
+    co.commit()
+
+
     return 0
 
 
@@ -49,6 +97,7 @@ def load_csvfile(name="tickets_appels_201202.csv"):
     fname = ["Compte facturé", "N° Facture", "N° abonné\t", "Date ", "Heure", "Durée/volume réel", "Durée/volume facturé", "Type "]
     csv_reader = csv_loading(name, fname)
     co_db = connect_database()
+    cursor = co_db.cursor()
 
     unexploitable_d = 0
 
@@ -62,16 +111,13 @@ def load_csvfile(name="tickets_appels_201202.csv"):
             i+= 1
             continue
 
-        unexploitable_d += load_data_db(row, co_db)
+        unexploitable_d += load_data_db(row, co_db, cursor)
+
+
+    if not is_query:
+        raise Exception("the file's structure is not correct")
 
     if unexploitable_d == 0:
         print("each datum has been processed")
     else:
         print(str(unexploitable_d) + " data haven't been processed")
-
-    if not is_query:
-        raise Exception("the file's structure is not correct")
-        # #try:
-        #     print(row['N° Facture'])
-        # except:
-        #     continue
