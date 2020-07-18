@@ -6,12 +6,9 @@ import req_db
 
 # load the CSV file or juste the database
 def loading_cmd(words, db_co):
-    # if db_cursor is not None:
-    #     print("A csv file is already loaded")
-    #     return db_cursor
     try:
-        if len(words) == 2 and words[1] == "database":
-            db_co = repository.connect_database()
+        if len(words) == 4 and words[1] == "database":
+            db_co = repository.connect_database(words[2], words[3])
             print("database successfully connected")
             return db_co
     except Exception as exception:
@@ -19,9 +16,9 @@ def loading_cmd(words, db_co):
 
     try:
         if len(words) == 1:
-            db_co = repository.load_csvfile()
+            db_co = repository.load_csvfile(db_co)
         else:
-            db_co = repository.load_csvfile(words[1])
+            db_co = repository.load_csvfile(db_co, words[1])
         print("file successfully loaded")
     except Exception as exception:
         print("file can't be loaded, try again: " + exception.args[0])
@@ -44,7 +41,7 @@ def UI_loop():
 
         if 'exit' == line:
             break
-        elif words[0] == 'load' and len(words) <= 2:
+        elif words[0] == 'load' and (len(words) <= 2 or len(words) == 4):
             db_co = loading_cmd(words, db_co)
         elif words == ['count','sms']:
             req_db.count_sms(db_co)

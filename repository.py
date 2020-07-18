@@ -19,8 +19,8 @@ def csv_loading(name, fname):
 
 
 #Connect the db to the program
-def connect_database():
-    co = mysql.connector.connect(user='gillian', password='password', database='phonedata')
+def connect_database(usr, pswd):
+    co = mysql.connector.connect(user= usr, password= pswd, database='phonedata')
     return co
 
 #Insert a new subscriber in the Db
@@ -145,15 +145,14 @@ def load_data_db(row, co, cursor):
 
 
 # Read through each line of the CSV
-def load_csvfile(name="tickets_appels_201202.csv"):
+def load_csvfile( co_db, name="tickets_appels_201202.csv"):
+
+    if co_db is None:
+        raise Exception("A database must be loaded before")
+
 
     fname = ["Compte facturé", "N° Facture", "N° abonné\t", "Date ", "Heure", "Durée/volume réel", "Durée/volume facturé", "Type "]
     csv_reader = csv_loading(name, fname)
-
-    try:
-        co_db = connect_database()
-    except:
-        raise Exception("database not found")
 
     cursor = co_db.cursor()
 
