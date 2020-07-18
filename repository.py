@@ -91,20 +91,20 @@ def load_data_db(row, co, cursor):
 
     if typed.find("connexion") != -1:
         sql += "`Iconnection` (`subscriber`, `date`, `time`, `amount`, `billed_amount`) VALUES (%s, %s, %s, %s, %s)"
-    elif typed.find("appel") != -1:
+    elif typed.find("appel") != -1 or typed.find("messagerie vocale"):
         val = format_duration(val)
-        print(val)
         sql += "`call` (`subscriber`, `date`, `time`, `duration`, `billed_duration`) VALUES (%s, %s, %s, %s, %s)"
     elif typed.find("sms") != -1:
-        #print("message")
-        return 1
+        val = (subs, date, hour)
+        sql += "`msg` (`subscriber`, `date`, `time`) VALUES (%s, %s, %s)"
     elif typed.find("suivi conso") != -1:
-        #print("suivi conso")
+        print("unsupported: suivi conso")
         return 1
     elif typed.find("messagerie vocale"):
-        #print("messagerie vocale")
+        print("unsupported: messagerie vocale")
         return 1
     else:
+        print("unsupported type" + typed)
         return 1
 
     cursor.execute(sql, val)

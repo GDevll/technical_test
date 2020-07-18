@@ -13,7 +13,7 @@ CREATE TABLE IF NOT EXISTS `phonedata`.`msg`(
     `id` INT NOT NULL AUTO_INCREMENT,
     `subscriber` INT NOT NULL,
     `date` DATE,
-    `time` TIME NOT NULL,
+    `time` TIME,
     PRIMARY KEY (`id`),
     FOREIGN KEY(`subscriber`) REFERENCES `phonedata`.`subscriber`(`subscriber`)
 );
