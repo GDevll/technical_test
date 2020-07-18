@@ -8,7 +8,7 @@ from datetime import datetime
 def csv_loading(name, fname):
     try:
         file = open(name, encoding='ISO-8859-1', newline='')
-    except OSError as error:
+    except OSError:
         raise Exception("file not found")
 
     print("loading csv file: " + name)
@@ -46,7 +46,7 @@ def load_sub(row, db, cursor):
     sql_find_sub = "SELECT * FROM `phonedata`.`subscriber` WHERE `subscriber`=" + subs
 
     cursor.execute(sql_find_sub)
-    records = cursor.fetchall()
+    cursor.fetchall()
 
     if (cursor.rowcount == 0):
         insert_sub(row, db, cursor)

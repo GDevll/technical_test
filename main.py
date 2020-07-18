@@ -1,28 +1,36 @@
 import sys
 
 import repository
+import req_db
+
+
 
 def loading_cmd(words, db_cursor):
-    if db_cursor is not None:
-        print("A cvs file is already loaded")
-        return db_cursor
+    # if db_cursor is not None:
+    #     print("A csv file is already loaded")
+    #     return db_cursor
+    try:
+        if len(words) == 2 and words[1] == "database":
+            db_co = repository.connect_database()
+            print("database successfully connected")
+            return db_co
+    except Exception as exception:
+        print("database can't be connected, try again: " + exception.args[0])
 
     try:
-        if len(words) == 2:
-            db_cursor = repository.load_csvfile(words[1])
+        if len(words) == 1:
+            db_co = repository.load_csvfile()
         else:
-            db_cursor = repository.load_csvfile()
-
+            db_co = repository.load_csvfile(words[1])
         print("file successfully loaded")
-
     except Exception as exception:
         print("file can't be loaded, try again: " + exception.args[0])
 
-    return db_cursor
+    return db_co
 
 def UI_loop():
 
-    db_cursor = None
+    db_co = None
 
     for line in sys.stdin:
 
@@ -35,9 +43,10 @@ def UI_loop():
 
         if 'exit' == line:
             break
-
-        if words[0] == 'load' and len(words) <= 2:
-            db_cursor = loading_cmd(words, db_cursor)
+        elif words[0] == 'load' and len(words) <= 2:
+            db_co = loading_cmd(words, db_co)
+        elif words == ['count','sms']:
+            req_db.count_sms(db_co)
         else:
             print("command not found: " + line)
 
