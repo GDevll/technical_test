@@ -54,13 +54,15 @@ def UI_loop():
 
         print('-', end='', flush=True)
 
+    if db_co is not None:
+        db_co.close()
+
 
 
 # Initialize the loop for the UI
 def main():
 
     print("\ncall file analyser started")
-    print("\nPlease initialized the process by entering:'load filename.csv'\n")
     print('-', end='', flush=True)
 
     UI_loop()
