@@ -51,14 +51,7 @@ def load_sub(row, db, cursor):
     if (cursor.rowcount == 0):
         insert_sub(row, db, cursor)
 
-
-
-def load_data_db(row, co, cursor):
-
-    load_sub(row, co, cursor)
-
-    subs = row["N° abonné\t"]
-    typed = row["Type "]
+def verif_data(row):
     try:
         date = datetime.strptime(row["Date "], '%d/%m/%Y').strftime('%Y-%m-%d')
     except:
@@ -69,18 +62,26 @@ def load_data_db(row, co, cursor):
     except:
         hour = None
 
+    return (date, hour)
+
+
+
+def load_data_db(row, co, cursor):
+
+    load_sub(row, co, cursor)
+
+    subs = row["N° abonné\t"]
+    typed = row["Type "]
     r_amount = row["Durée/volume réel"]
     i_amount = row["Durée/volume facturé"]
+    (date, hour) = verif_data(row)
 
     sql = "INSERT INTO `phonedata`."
-    val =("", "")
+    val = (subs, date, hour, r_amount, i_amount)
 
     if typed.find("connexion") != -1:
-        val = (subs, date, hour, r_amount, i_amount)
-        print(val)
         sql += "`Iconnection` (`subscriber`, `date`, `time`, `amount`, `billed_amount`) VALUES (%s, %s, %s, %s, %s)"
     elif typed.find("appel") != -1:
-        #print("call")
         return 1
     elif typed.find("sms") != -1:
         #print("message")
