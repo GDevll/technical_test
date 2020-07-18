@@ -4,7 +4,7 @@ import mysql.connector
 # file: tickets_appels_201202.csv
 
 
-def csv_loading(name):
+def csv_loading(name, fname):
     try:
         file = open(name, encoding='ISO-8859-1', newline='')
     except OSError as error:
@@ -12,7 +12,6 @@ def csv_loading(name):
 
     print("loading csv file: " + name)
 
-    fname = ["Compte facturé", "N° Facture", "N° abonné\t", "Date ", "Heure", "Durée/volume réel", "Durée/volume facturé", "Type "]
     reader = csv.DictReader(file, delimiter=";", fieldnames=fname)
 
     return reader
@@ -21,25 +20,28 @@ def csv_loading(name):
 
 def connect_database():
     co = mysql.connector.connect(user='gillian', password='password', database='phonedata')
+    return co
+
+
+
 
 
 def load_csvfile(name="tickets_appels_201202.csv"):
 
-    csv_reader = csv_loading(name)
+    fname = ["Compte facturé", "N° Facture", "N° abonné\t", "Date ", "Heure", "Durée/volume réel", "Durée/volume facturé", "Type "]
+    csv_reader = csv_loading(name, fname)
     co_db = connect_database()
 
     i = 0
     is_query = False
-    for row in reader:
+    for row in csv_reader:
         if not is_query:
             if list(row.values()) == fname:
                 is_query = True
             i+= 1
             continue
 
-        print(row)
-        break
-
+        #load_data_db(row, co_db)
 
 
         # #try:
