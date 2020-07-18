@@ -1,5 +1,6 @@
 import csv
 import mysql.connector
+from datetime import datetime
 
 # file: tickets_appels_201202.csv
 
@@ -36,9 +37,6 @@ def insert_sub(row, db, cursor):
 
     if cursor.rowcount == 0:
         raise Exception("Error subscriber insertion")
-    else:
-        print("Yes")
-
 
 
 def load_sub(row, db, cursor):
@@ -61,31 +59,46 @@ def load_data_db(row, co, cursor):
 
     subs = row["N° abonné\t"]
     typed = row["Type "]
-    date = row["Date "]
-    hour = row["Heure"]
+    try:
+        date = datetime.strptime(row["Date "], '%d/%m/%Y').strftime('%Y-%m-%d')
+    except:
+        date = None
+
+    try:
+        hour = datetime.strptime(row["Heure"], '%H:%M:%S').strftime('%H:%M:%S')
+    except:
+        hour = None
+
     r_amount = row["Durée/volume réel"]
     i_amount = row["Durée/volume facturé"]
 
-    sql = "INSERT INTO phonedata."
-    val = ("","")
+    sql = "INSERT INTO `phonedata`."
+    val =("", "")
 
     if typed.find("connexion") != -1:
-        print("connexion")
-
+        val = (subs, date, hour, r_amount, i_amount)
+        print(val)
+        sql += "`Iconnection` (`subscriber`, `date`, `time`, `amount`, `billed_amount`) VALUES (%s, %s, %s, %s, %s)"
     elif typed.find("appel") != -1:
-        print("call")
+        #print("call")
+        return 1
     elif typed.find("sms") != -1:
-        print("message")
+        #print("message")
+        return 1
     elif typed.find("suivi conso") != -1:
-        print("suivi conso")
+        #print("suivi conso")
+        return 1
     elif typed.find("messagerie vocale"):
-        print("messagerie vocale")
+        #print("messagerie vocale")
+        return 1
     else:
         return 1
 
-
+    cursor.execute(sql, val)
     co.commit()
 
+    if cursor.rowcount == 0:
+        return 1
 
     return 0
 

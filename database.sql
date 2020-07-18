@@ -33,9 +33,9 @@ CREATE TABLE IF NOT EXISTS `phonedata`.`Iconnection`(
     `id` INT NOT NULL AUTO_INCREMENT,
     `subscriber`INT NOT NULL,
     `date` DATE,
-    `time` TIME NOT NULL,
-    `amount` TIME NOT NULL,
-    `billed_amount` TIME NOT NULL,
+    `time` TIME,
+    `amount` FLOAT NOT NULL,
+    `billed_amount` FLOAT NOT NULL,
     PRIMARY KEY(`id`),
     FOREIGN KEY(`subscriber`) REFERENCES `phonedata`.`subscriber`(`subscriber`)
 );
