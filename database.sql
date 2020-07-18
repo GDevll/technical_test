@@ -12,8 +12,8 @@ CREATE TABLE IF NOT EXISTS `phonedata`.`subscriber`(
 CREATE TABLE IF NOT EXISTS `phonedata`.`msg`(
     `id` INT NOT NULL AUTO_INCREMENT,
     `subscriber` INT NOT NULL,
-    `date` DATE,
-    `time` TIME,
+    `date` DATE NOT NULL,
+    `time` TIME NOT NULL,
     PRIMARY KEY (`id`),
     FOREIGN KEY(`subscriber`) REFERENCES `phonedata`.`subscriber`(`subscriber`)
 );
@@ -21,9 +21,9 @@ CREATE TABLE IF NOT EXISTS `phonedata`.`msg`(
 CREATE TABLE IF NOT EXISTS `phonedata`.`call`(
     `id` INT NOT NULL AUTO_INCREMENT,
     `subscriber`INT NOT NULL,
-    `date` DATE,
-    `time` TIME,
-    `duration` TIME,
+    `date` DATE NOT NULL,
+    `time` TIME NOT NULL,
+    `duration` TIME NOT NULL,
     `billed_duration` TIME NOT NULL,
     PRIMARY KEY(`id`),
     FOREIGN KEY(`subscriber`) REFERENCES `phonedata`.`subscriber`(`subscriber`)
@@ -32,8 +32,8 @@ CREATE TABLE IF NOT EXISTS `phonedata`.`call`(
 CREATE TABLE IF NOT EXISTS `phonedata`.`Iconnection`(
     `id` INT NOT NULL AUTO_INCREMENT,
     `subscriber`INT NOT NULL,
-    `date` DATE,
-    `time` TIME,
+    `date` DATE NOT NULL,
+    `time` TIME NOT NULL,
     `amount` FLOAT NOT NULL,
     `billed_amount` FLOAT NOT NULL,
     PRIMARY KEY(`id`),
