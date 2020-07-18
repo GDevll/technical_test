@@ -40,3 +40,41 @@ def sum_call(db):
             print("There are no call.")
         else:
             print("There is " + str(nb_sms) + " of call duration.")
+
+
+
+def best_customer(db):
+    if db is None:
+        print("Error, can't be applied\nNo database loaded...")
+        return
+
+    cursor = db.cursor()
+
+    sql = '''SELECT `subscriber`, `billed_amount`, `time`
+    FROM
+        (SELECT `id`, `subscriber`, `billed_amount`, `time`,
+                    @subscriber_rank := IF(@current_subscriber = `subscriber`, @subscriber_rank + 1, 1) AS subscriber_rank,
+                    @current_subscriber := `subscriber`
+        FROM (
+            SELECT * FROM `phonedata`.`Iconnection`
+            WHERE TIMEDIFF(`time`, '08:00:00') < 0 OR TIMEDIFF(`time`, '18:00:00') > 0
+        ) AS tab
+        ORDER BY `subscriber`, `billed_amount` DESC
+        ) ranked
+    WHERE subscriber_rank <= 10;'''
+    cursor.execute(sql)
+    record = cursor.fetchall()
+    cursor.execute(sql)
+    record = cursor.fetchall()
+
+    customer  = None
+    i = 10
+    for row in record:
+        if customer != row[0]:
+            i = 10
+            customer = row[0]
+            print("-------------------")
+            print("TOP 10 subscriber : " + str(customer))
+
+        print(str(i) + "---" + "amount: " + str(row[1]) + "    time: " + str(row[2]))
+        i -= 1

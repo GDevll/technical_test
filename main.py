@@ -5,7 +5,7 @@ import req_db
 
 
 
-def loading_cmd(words, db_cursor):
+def loading_cmd(words, db_co):
     # if db_cursor is not None:
     #     print("A csv file is already loaded")
     #     return db_cursor
@@ -49,6 +49,8 @@ def UI_loop():
             req_db.count_sms(db_co)
         elif words == ['sum', 'call']:
             req_db.sum_call(db_co)
+        elif words == ['top', '10']:
+            req_db.best_customer(db_co)
         else:
             print("command not found: " + line)
 
