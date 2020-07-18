@@ -47,6 +47,8 @@ def UI_loop():
             db_co = loading_cmd(words, db_co)
         elif words == ['count','sms']:
             req_db.count_sms(db_co)
+        elif words == ['sum', 'call']:
+            req_db.sum_call(db_co)
         else:
             print("command not found: " + line)
 
