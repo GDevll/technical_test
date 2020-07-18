@@ -2,9 +2,27 @@ import sys
 
 import repository
 
+def loading_cmd(words, db_cursor):
+    if db_cursor is not None:
+        print("A cvs file is already loaded")
+        return db_cursor
 
+    try:
+        if len(words) == 2:
+            db_cursor = repository.load_csvfile(words[1])
+        else:
+            db_cursor = repository.load_csvfile()
+
+        print("file successfully loaded")
+
+    except Exception as exception:
+        print("file can't be loaded, try again: " + exception.args[0])
+
+    return db_cursor
 
 def UI_loop():
+
+    db_cursor = None
 
     for line in sys.stdin:
 
@@ -19,17 +37,7 @@ def UI_loop():
             break
 
         if words[0] == 'load' and len(words) <= 2:
-
-            try:
-                if len(words) == 2:
-                    repository.load_csvfile(words[1])
-                else:
-                    repository.load_csvfile()
-
-                print("file successfully loaded")
-            except Exception as exception:
-                print("file can't be loaded, try again: " + exception.args[0])
-
+            db_cursor = loading_cmd(words, db_cursor)
         else:
             print("command not found: " + line)
 

@@ -76,6 +76,7 @@ def format_duration(val):
 
     return (val[0], val[1],val[2], check_hour(duration), check_hour(billed_d))
 
+
 def load_data_db(row, co, cursor):
 
     load_sub(row, co, cursor)
@@ -152,3 +153,5 @@ def load_csvfile(name="tickets_appels_201202.csv"):
         print("each datum has been processed")
     else:
         print(str(unexploitable_d) + " data haven't been processed")
+
+    return co_db
