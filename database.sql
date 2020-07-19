@@ -2,6 +2,8 @@
 CREATE SCHEMA IF NOT EXISTS `phonedata`;
 
 --Create tables
+
+-- Table of subscribers
 CREATE TABLE IF NOT EXISTS `phonedata`.`subscriber`(
     `invoice_acc`   INT NOT NULL,
     `invoice`       INT NOT NULL,
@@ -9,6 +11,7 @@ CREATE TABLE IF NOT EXISTS `phonedata`.`subscriber`(
     PRIMARY KEY (`subscriber`)
 );
 
+-- Table of messages
 CREATE TABLE IF NOT EXISTS `phonedata`.`msg`(
     `id` INT NOT NULL AUTO_INCREMENT,
     `subscriber` INT NOT NULL,
@@ -18,6 +21,7 @@ CREATE TABLE IF NOT EXISTS `phonedata`.`msg`(
     FOREIGN KEY(`subscriber`) REFERENCES `phonedata`.`subscriber`(`subscriber`)
 );
 
+--Table of calls
 CREATE TABLE IF NOT EXISTS `phonedata`.`call`(
     `id` INT NOT NULL AUTO_INCREMENT,
     `subscriber`INT NOT NULL,
@@ -29,6 +33,7 @@ CREATE TABLE IF NOT EXISTS `phonedata`.`call`(
     FOREIGN KEY(`subscriber`) REFERENCES `phonedata`.`subscriber`(`subscriber`)
 );
 
+-- Table of cellular connection
 CREATE TABLE IF NOT EXISTS `phonedata`.`Iconnection`(
     `id` INT NOT NULL AUTO_INCREMENT,
     `subscriber`INT NOT NULL,
